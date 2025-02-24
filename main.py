@@ -49,5 +49,6 @@ input_dict = {
 
 # Predict Button
 if st.button('Predict'):
+
     prediction = predict(input_dict)
     st.success(f"Predicted premium: {prediction}")

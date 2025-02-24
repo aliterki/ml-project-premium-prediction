@@ -67,36 +67,31 @@ def preprocessing_input(input_dict):
     df['income_lakhs'] = input_dict['Income in Lakhs']
     df['genetical_risk'] = input_dict['Genetical Risk']
 
+    # One-Hot Encoding for Categorical Variables (Setting All to 0 First)
+    df[['gender_Male']] = 0
+    df[['region_Northwest', 'region_Southeast', 'region_Southwest']] = 0
+    df[['marital_status_Unmarried']] = 0
+    df[['bmi_category_Obesity', 'bmi_category_Overweight', 'bmi_category_Underweight']] = 0
+    df[['smoking_status_Occasional', 'smoking_status_Regular']] = 0
+    df[['employment_status_Salaried', 'employment_status_Self-Employed']] = 0
     # Encoding categorical variables
-    if input_dict['Gender'] == 'Male':
-        df['gender_Male'] = 1
+    df['gender_Male'] = 1 if input_dict['Gender'] == 'Male' else 0
 
-    if input_dict['Region'] == 'Northwest':
-        df['region_Northwest'] = 1
-    elif input_dict['Region'] == 'Southeast':
-        df['region_Southeast'] = 1
-    elif input_dict['Region'] == 'Southwest':
-        df['region_Southwest'] = 1
+    df['region_Northwest'] = 1 if input_dict['Region'] == 'Northwest' else 0
+    df['region_Southeast'] = 1 if input_dict['Region'] == 'Southeast' else 0
+    df['region_Southwest'] = 1 if input_dict['Region'] == 'Southwest' else 0
 
-    if input_dict['Marital Status'] == 'Unmarried':
-        df['marital_status_Unmarried'] = 1
+    df['marital_status_Unmarried'] = 1 if input_dict['Marital Status'] == 'Unmarried' else 0
 
-    if input_dict['BMI Category'] == 'Obesity':
-        df['bmi_category_Obesity'] = 1
-    elif input_dict['BMI Category'] == 'Overweight':
-        df['bmi_category_Overweight'] = 1
-    elif input_dict['BMI Category'] == 'Underweight':
-        df['bmi_category_Underweight'] = 1
+    df['bmi_category_Obesity'] = 1 if input_dict['BMI Category'] == 'Obesity' else 0
+    df['bmi_category_Overweight'] = 1 if input_dict['BMI Category'] == 'Overweight' else 0
+    df['bmi_category_Underweight'] = 1 if input_dict['BMI Category'] == 'Underweight' else 0
 
-    if input_dict['Smoking Status'] == 'Occasional':
-        df['smoking_status_Occasional'] = 1
-    elif input_dict['Smoking Status'] == 'Regular':
-        df['smoking_status_Regular'] = 1
+    df['smoking_status_Occasional'] = 1 if input_dict['Smoking Status'] == 'Occasional' else 0
+    df['smoking_status_Regular'] = 1 if input_dict['Smoking Status'] == 'Regular' else 0
 
-    if input_dict['Employment Status'] == 'Salaried':
-        df['employment_status_Salaried'] = 1
-    elif input_dict['Employment Status'] == 'Self-Employed':
-        df['employment_status_Self-Employed'] = 1
+    df['employment_status_Salaried'] = 1 if input_dict['Employment Status'] == 'Salaried' else 0
+    df['employment_status_Self-Employed'] = 1 if input_dict['Employment Status'] == 'Self-Employed' else 0
 
     df['normalized_risk_score'] = calculate_normalized_risk(input_dict['Medical History'])
 
@@ -107,6 +102,7 @@ def preprocessing_input(input_dict):
 
 def predict(input_dict):
     input_df = preprocessing_input(input_dict)
+
     if input_dict['Age'] <= 25:
         prediction = model_young.predict(input_df)
     else:
